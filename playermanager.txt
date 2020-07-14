@@ -1,0 +1,66 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class playermanager : MonoBehaviour
+{
+    //属性值
+    public int lifeValue = 3;
+    public int times=0;
+    public bool isDead;
+    public GameObject[] item;
+    public GameObject ball;
+    public float speed = 3;
+    public Text Value;
+    public Text Peng;
+    public GameObject overUI;
+    //单例
+    private static playermanager instance;
+
+    public static playermanager Instance 
+    { 
+        get => instance; 
+        set => instance = value; 
+    }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(isDead)
+        {
+            Recover();
+        }
+        Value.text = lifeValue.ToString();
+        Peng.text = times.ToString();
+
+    }
+    private void Recover()
+    {
+        if(lifeValue<0)
+        {
+            //游戏失败，返回主界面
+            overUI.SetActive(true);
+        }
+        else
+        {
+            lifeValue--;
+            //实例化一个球
+            ball = GameObject.Instantiate(item[0], new Vector3(0, -4, 0), Quaternion.identity);
+            Rigidbody2D rgd = ball.GetComponent<Rigidbody2D>();
+            rgd.velocity = transform.up * speed;
+            isDead = false;
+        }
+    }
+}
